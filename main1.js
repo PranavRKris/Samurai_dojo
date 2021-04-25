@@ -52,15 +52,17 @@ let loadImages = (callback) => {
   );
 };
 
-let animate = (ctx, images, animation, callback) => {
+let animate = (ctx, images, animation, callback, size) => {
   images[animation].forEach((image, index) => {
     setTimeout(() => {
-      ctx.clearRect(0, 0, 500, 500);
-      ctx.drawImage(image, 10, 10, 500, 500);
+      ctx.clearRect(0, 0, size, 500);
+      ctx.drawImage(image, 0, 0, size, 500);
     }, index * 100);
   });
   setTimeout(callback, images[animation].length * 100);
 };
+
+size = 500;
 
 loadImages((images) => {
   let queuedanimation = [];
@@ -73,7 +75,7 @@ loadImages((images) => {
     } else {
       selectedanimation = queuedanimation.shift();
     }
-    animate(ctx, images, selectedanimation, aux);
+    animate(ctx, images, selectedanimation, aux, size);
   };
   aux();
 
@@ -86,10 +88,12 @@ loadImages((images) => {
   };
 
   document.getElementById("forward").onclick = () => {
+    size = size + 50;
     queuedanimation.push("forward");
   };
 
   document.getElementById("backward").onclick = () => {
+    size = size - 50;
     queuedanimation.push("backward");
   };
 
@@ -102,9 +106,11 @@ loadImages((images) => {
 
     switch (event.key) {
       case "ArrowLeft":
+        size = size - 50;
         queuedanimation.push("backward");
         break;
       case "ArrowRight":
+        size = size + 50;
         queuedanimation.push("forward");
         break;
       case "ArrowUp":
